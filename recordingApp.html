@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>録音アプリ</title>
+    <style>
+        button {
+            font-size: 16px;
+            margin: 10px;
+            padding: 10px;
+            background-color: lightgreen;
+            border: none;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+<body>
+    <h1>録音アプリ</h1>
+    <button id="start">録音開始</button>
+    <button id="stop">録音終了</button>
+    <p id="status">録音ステータス: 停止中</p>
+
+    <script>
+        let mediaRecorder;
+        let audioChunks = [];
+
+        // 録音開始
+        document.getElementById('start').addEventListener('click', async () => {
+            const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+            mediaRecorder = new MediaRecorder(stream);
+
+            mediaRecorder.ondataavailable = event => {
+                audioChunks.push(event.data);
+            };
+
+            mediaRecorder.onstop = () => {
+                const audioBlob = new Blob(audioChunks, { type: 'audio/wav' });
+                const audioUrl = URL.createObjectURL(audioBlob);
+                const audio = new Audio(audioUrl);
+                audio.play();
+            };
+
+            mediaRecorder.start();
+            document.getElementById('status').textContent = "録音ステータス: 録音中";
+        });
+
+        // 録音停止
+        document.getElementById('stop').addEventListener('click', () => {
+            if (mediaRecorder) {
+                mediaRecorder.stop();
+                document.getElementById('status').textContent = "録音ステータス: 停止中";
+            }
+        });
+    </script>
+</body>
+</html>
