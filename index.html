@@ -7,7 +7,7 @@
             font-size: 16px;
             margin: 10px;
             padding: 10px;
-            background-color: lightgreen;
+            background-color: lightblue;
             border: none;
             border-radius: 5px;
         }
@@ -34,4 +34,32 @@
 
             mediaRecorder.onstop = () => {
                 const audioBlob = new Blob(audioChunks, { type: 'audio/wav' });
-                const audioUrl =
+                const audioUrl = URL.createObjectURL(audioBlob);
+
+                // ダウンロードリンクを作成
+                const link = document.createElement('a');
+                link.href = audioUrl;
+                link.download = 'recording.wav'; // ファイル名
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+                
+                // 動作確認用に録音した音声を再生
+                const audio = new Audio(audioUrl);
+                audio.play();
+            };
+
+            mediaRecorder.start();
+            document.getElementById('status').textContent = "録音ステータス: 録音中";
+        });
+
+        // 録音停止
+        document.getElementById('stop').addEventListener('click', () => {
+            if (mediaRecorder) {
+                mediaRecorder.stop();
+                document.getElementById('status').textContent = "録音ステータス: 停止中";
+            }
+        });
+    </script>
+</body>
+</html>
