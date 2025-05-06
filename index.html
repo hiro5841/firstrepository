@@ -34,22 +34,4 @@
 
             mediaRecorder.onstop = () => {
                 const audioBlob = new Blob(audioChunks, { type: 'audio/wav' });
-                const audioUrl = URL.createObjectURL(audioBlob);
-                const audio = new Audio(audioUrl);
-                audio.play();
-            };
-
-            mediaRecorder.start();
-            document.getElementById('status').textContent = "録音ステータス: 録音中";
-        });
-
-        // 録音停止
-        document.getElementById('stop').addEventListener('click', () => {
-            if (mediaRecorder) {
-                mediaRecorder.stop();
-                document.getElementById('status').textContent = "録音ステータス: 停止中";
-            }
-        });
-    </script>
-</body>
-</html>
+                const audioUrl =
